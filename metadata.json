@@ -1,6 +1,0 @@
-{
-  "name": "猜數字大挑戰",
-  "description": "一個現代化的猜數字遊戲，挑戰在 10 次內猜中 1 到 100 之間的神秘數字。",
-  "requestFramePermissions": [],
-  "majorCapabilities": []
-}
