@@ -195,6 +195,18 @@ export default function App() {
                   <RotateCcw size={18} />
                   重新開始
                 </button>
+                
+                <button
+                  onClick={() => {
+                    const text = `🎮 猜數字大挑戰\n我用了 ${history.length} 次機會就猜對了數字 ${targetNumber}！\n你也來挑戰看看吧！`;
+                    navigator.clipboard.writeText(text);
+                    alert('已複製戰績，快去分享給朋友吧！');
+                  }}
+                  className="mt-4 text-slate-500 hover:text-indigo-400 text-xs transition-colors underline underline-offset-4"
+                >
+                  分享我的戰績
+                </button>
+                
               </motion.div>
             )}
           </AnimatePresence>
