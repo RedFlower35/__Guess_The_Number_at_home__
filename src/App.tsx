@@ -31,6 +31,8 @@ export default function App() {
   const [history, setHistory] = useState<GuessRecord[]>([]);
   const [status, setStatus] = useState<GameStatus>('playing');
   const [message, setMessage] = useState('輸入 1 到 100 之間的數字開始挑戰！');
+  const [minRange, setMinRange] = useState(1);
+  const [maxRange, setMaxRange] = useState(100);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Initialize game
@@ -42,6 +44,8 @@ export default function App() {
     setTargetNumber(Math.floor(Math.random() * 100) + 1);
     setGuess('');
     setHistory([]);
+    setMinRange(1);
+    setMaxRange(100);
     setStatus('playing');
     setMessage('輸入 1 到 100 之間的數字開始挑戰！');
     inputRef.current?.focus();
@@ -54,8 +58,8 @@ export default function App() {
 
     const numGuess = parseInt(guess);
 
-    if (isNaN(numGuess) || numGuess < 1 || numGuess > 100) {
-      setMessage('請輸入 1 到 100 之間的有效數字！');
+    if (isNaN(numGuess) || numGuess < minRange || numGuess > maxRange) {
+      setMessage(`請輸入 ${minRange} 到 ${maxRange} 之間的有效數字！`);
       return;
     }
 
@@ -82,7 +86,13 @@ export default function App() {
       setStatus('lost');
       setMessage('遊戲結束！正確答案是 ' + targetNumber);
     } else {
-      setMessage(numGuess > targetNumber ? '太大了！' : '太小了！');
+      if (numGuess > targetNumber) {
+        setMaxRange(Math.min(maxRange, numGuess - 1));
+        setMessage('太大了！');
+      } else {
+        setMinRange(Math.max(minRange, numGuess + 1));
+        setMessage('太小了！');
+      }
     }
   };
 
@@ -106,7 +116,7 @@ export default function App() {
             Guess The Number
           </motion.div>
           <h1 className="text-4xl font-bold tracking-tight mb-2">猜數字大挑戰</h1>
-          <p className="text-slate-400 text-sm">目標：1 - 100 之間的一個數字</p>
+          <p className="text-slate-400 text-sm">目前區間：<span className="text-indigo-400 font-mono font-bold">{minRange} - {maxRange}</span></p>
         </div>
 
         {/* Status Area */}
@@ -138,7 +148,7 @@ export default function App() {
               value={guess}
               onChange={(e) => setGuess(e.target.value)}
               disabled={status !== 'playing'}
-              placeholder={status === 'playing' ? "輸入數字..." : "遊戲已結束"}
+              placeholder={status === 'playing' ? `輸入 ${minRange} ~ ${maxRange} ...` : "遊戲已結束"}
               className="w-full bg-slate-950 border-2 border-slate-800 rounded-2xl py-6 px-6 text-2xl font-mono focus:border-indigo-500 focus:outline-none transition-all placeholder:text-slate-800 disabled:opacity-50"
             />
             
